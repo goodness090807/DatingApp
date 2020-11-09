@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">約會App</a>
+        <ul class="navbar-nav mr-auto" *ngIf="accountService.currentUser$ | async">
+            <li class="nav-item">
+                <a class="nav-link" href="#">首頁資訊</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">列表</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">訊息</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">訊息</a>
+            </li>
+        </ul>
+        
+        <div class="dropdown" *ngIf="accountService.currentUser$ | async" dropdown>
+            <a class="dropdown-toggle text-light" dropdownToggle>歡迎回來!!!</a>
+            <div class="dropdown-menu mt-3" *dropdownMenu>
+                <a class="dropdown-item">編輯使用者資料</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" (click)="logout()">登出</a>
+            </div>
+        </div>
+
+        <form *ngIf="(accountService.currentUser$ | async) === null" #loginForm="ngForm" class="form-inline mt-2 mt-md-0" (ngSubmit)="login()"
+            autocomplete="off">
+            <input 
+                name="username"
+                [(ngModel)]="model.username"
+                class="form-control mr-sm-2" 
+                type="text" 
+                placeholder="帳號">
+            <input
+                name="password"
+                [(ngModel)]="model.password"
+                class="form-control mr-sm-2"
+                type="password"
+                placeholder="密碼">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">登入</button>
+        </form>
+    </div>
+
+</nav>

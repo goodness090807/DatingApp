@@ -1,0 +1,16 @@
+<form #registerForm="ngForm" (ngSubmit)="register()" autocomplete="off">
+    <h2 class="text-center text-primary">使用者註冊</h2>
+    <hr>
+    <div class="form-group">
+        <input type="text" class="form-control" name="username" 
+        [(ngModel)]="model.username" placeholder="輸入使用者帳號">
+    </div>
+    <div class="form-group">
+        <input type="password" class="form-control" name="password" 
+        [(ngModel)]="model.password" placeholder="輸入使用者密碼">
+    </div>
+    <div class="text-center">
+        <button class="btn btn-success mr-2" type="submit">註冊</button>
+        <button class="btn btn-default" (click)="cancel()" type="button">取消</button>
+    </div>
+</form>
