@@ -1,23 +1,22 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="#">約會App</a>
+        <a class="navbar-brand" href="#" routerLink="/" routerLinkActive="active">App</a>
         <ul class="navbar-nav mr-auto" *ngIf="accountService.currentUser$ | async">
-            <li class="nav-item">
-                <a class="nav-link" href="#">首頁資訊</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">列表</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">訊息</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">訊息</a>
-            </li>
+            <ng-container>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" routerLink="/members" routerLinkActive="active">配對資訊</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" routerLink="/lists" routerLinkActive="active">列表</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" routerLink="/messages" routerLinkActive="active">訊息</a>
+                </li>
+            </ng-container>
         </ul>
         
-        <div class="dropdown" *ngIf="accountService.currentUser$ | async" dropdown>
-            <a class="dropdown-toggle text-light" dropdownToggle>歡迎回來!!!</a>
+        <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
+            <a class="dropdown-toggle text-light" dropdownToggle>歡迎回來 {{ user.username | titlecase}}!</a>
             <div class="dropdown-menu mt-3" *dropdownMenu>
                 <a class="dropdown-item">編輯使用者資料</a>
                 <div class="dropdown-divider"></div>
