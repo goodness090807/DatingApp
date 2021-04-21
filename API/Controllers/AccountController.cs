@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using API.DTOs;
 using API.Entities;
 using API.Interfaces;
 using API.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,11 +18,13 @@ namespace API.Controllers
         private readonly DataContext _context;
 
         private readonly ITokenService _tokenservice;
-        
-        public AccountController(DataContext context, ITokenService tokenService)
+        private readonly IMapper _mapper;
+
+        public AccountController(DataContext context, ITokenService tokenService, IMapper mapper)
         {
             _context = context;
             _tokenservice = tokenService;
+            _mapper = mapper;
         }
 
         [HttpPost("register")]
@@ -28,14 +32,13 @@ namespace API.Controllers
         {
             if(await AccountExists(registerDto.UserName)) return BadRequest("帳號已存在!!!");
             
+            var user = _mapper.Map<AppUser>(registerDto);
+
             using var hmac = new HMACSHA512();
 
-            var user = new AppUser
-            {
-                UserName = registerDto.UserName.ToLower(),
-                PasswrodHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-                PasswordSalt = hmac.Key
-            };
+            user.UserName = registerDto.UserName.ToLower();
+            user.PasswrodHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+            user.PasswordSalt = hmac.Key;
 
             _context.Users.Add(user);
 
@@ -44,7 +47,9 @@ namespace API.Controllers
             return new UserDto
             {
                 Username = user.UserName,
-                Token = _tokenservice.CreateToken(user)
+                Token = _tokenservice.CreateToken(user),
+                KnownAs = user.KnownAs,
+                Gender = user.Gender
             };
         }
 
@@ -52,6 +57,7 @@ namespace API.Controllers
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             var user = await _context.Users
+                .Include(p => p.Photos)
                 .SingleOrDefaultAsync(x => x.UserName.ToLower() == loginDto.UserName.ToLower());
 
             if(user == null) return Unauthorized("該帳號不存在!!!");
@@ -68,7 +74,10 @@ namespace API.Controllers
             return new UserDto
             {
                 Username = user.UserName,
-                Token = _tokenservice.CreateToken(user)
+                Token = _tokenservice.CreateToken(user),
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
+                KnownAs = user.KnownAs,
+                Gender = user.Gender
             };
         }
 

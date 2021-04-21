@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using API.Data;
 using API.Extensions;
 using API.Interfaces;
+using API.Middleware;
 using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -41,18 +42,22 @@ namespace API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            //這個是原始的錯誤訊息
+            // if (env.IsDevelopment())
+            // {
+            //     app.UseDeveloperExceptionPage();
+            // }
+            
+            //改成這個錯誤訊息
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
+            app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("*"));
 
-            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

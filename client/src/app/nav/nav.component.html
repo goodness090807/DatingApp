@@ -13,6 +13,9 @@
                     <a class="nav-link" href="#" routerLink="/messages" routerLinkActive="active">訊息</a>
                 </li>
             </ng-container>
+            <li class="nav-item">
+                <a class="nav-link" href="#" routerLink="/errors" routerLinkActive="active">測試錯誤頁面</a>
+            </li>
         </ul>
         
         <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
