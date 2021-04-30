@@ -55,7 +55,9 @@ namespace API.Controllers
 
             // return Ok(usersReturnDto);
         }
-
+        
+        //驗證角色權限
+        // [Authorize(Roles= "Admin")]
         [HttpGet("{username}", Name = "GetUser")]
         public async Task<ActionResult<MemberDto>> GetUser(string username)
         {
